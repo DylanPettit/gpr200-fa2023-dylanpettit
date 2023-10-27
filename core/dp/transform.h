@@ -8,11 +8,11 @@ namespace ew {
 		ew::Vec3 scale = ew::Vec3(1.0f, 1.0f, 1.0f);
 
 		ew::Mat4 getModelMatrix() const {
-			return ew::Translate(position)
-				* ew::RotateY(ew::Radians(rotation.y))
-				* ew::RotateX(ew::Radians(rotation.x))
-				* ew::RotateZ(ew::Radians(rotation.z))
-				* ew::Scale(scale);
+			return dp::Translate(position)
+				* dp::RotateY(ew::Radians(rotation.y))
+				* dp::RotateX(ew::Radians(rotation.x))
+				* dp::RotateZ(ew::Radians(rotation.z))
+				* dp::Scale(scale);
 		}
 	};
 }

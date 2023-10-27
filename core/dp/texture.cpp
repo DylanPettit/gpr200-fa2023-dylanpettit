@@ -4,8 +4,6 @@
 #include "../ew/external/glad.h"
 
 namespace dp {
-
-
 	unsigned int loadTexture(const char* filePath, int wrapMode, int filterMode) {
 		int width, height, numComponents;
 		unsigned char* data = stbi_load(filePath, &width, &height, &numComponents, 0);
@@ -32,5 +30,20 @@ namespace dp {
 		glBindTexture(GL_TEXTURE_2D, NULL);
 		stbi_image_free(data);
 		return texture;
+	}
+
+	int getTextureFormat(int numComponents)
+	{
+		switch (numComponents)
+		{
+		case 1:
+			return GL_RED;
+		case 2:
+			return GL_RG;
+		case 3:
+			return GL_RGB;
+		case 4:
+			return GL_RGBA;
+		}
 	}
 }

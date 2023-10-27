@@ -70,17 +70,22 @@ namespace dp {
 
 	void Shader::setVec2(const std::string& name, float x, float y) const
 	{
-		glUniform2f(glGetUniformLocation(m_id, name.c_str()), x, y)
+		glUniform2f(glGetUniformLocation(m_id, name.c_str()), x, y);
 	}
 
 	void Shader::setVec3(const std::string& name, float x, float y, float z) const
 	{
-		glUniform2f(glGetUniformLocation(m_id, name.c_str()), x, y, z)
+		glUniform3f(glGetUniformLocation(m_id, name.c_str()), x, y, z);
 	}
 
 	void Shader::setVec4(const std::string& name, float x, float y, float z, float w) const
 	{
-		glUniform2f(glGetUniformLocation(m_id, name.c_str()), x, y, z)
+		glUniform4f(glGetUniformLocation(m_id, name.c_str()), x, y, z, w);
+	}
+
+	void Shader::setMat4(const std::string& name, const ew::Mat4& v) const
+	{
+		glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &v[0][0]);
 	}
 
 	void Shader::use()

@@ -3,8 +3,6 @@
 #include "../ew/ewMath/vec3.h"
 
 namespace dp {
-	const float cosA = cosf(rad);
-	const float sinA = sinf(rad);
 	
 	inline ew::Mat4 Identity() {
 		return ew::Mat4(
@@ -17,35 +15,35 @@ namespace dp {
 	
 	inline ew::Mat4 Scale(const ew::Vec3& s) {
 		return ew::Mat4(
-			s.x, 0, 0, 0,
-			0, s.y, 0, 0,
-			0, 0, s.z, 0,
-			0, 0, 0, 1
+			s.x, 0.0f, 0.0f, 0.0f,
+			0.0f, s.y, 0.0f, 0.0f,
+			0.0f, 0.0f, s.z, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
 		);
 	};
 	
 	inline ew::Mat4 RotateX(float rad) {
 		return ew::Mat4(
 			1.0f, 0.0f, 0.0f, 0.0f,
-			0.0f, cosA, -sinA, 0.0f,
-			0.0f, sinA, cosA, 0.0f,
+			0.0f, cosf(rad), -sinf(rad), 0.0f,
+			0.0f, sinf(rad), cosf(rad), 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f
 		);
 	};
 	
 	inline ew::Mat4 RotateY(float rad) {
 		return ew::Mat4(
-			cosA, 0.0f, sinA, 0.0f,
+			cosf(rad), 0.0f, sinf(rad), 0.0f,
 			0.0f, 1.0f, 0.0f, 0.0f,
-			-sinA, 0.0f, cosA, 0.0f,
+			-sinf(rad), 0.0f, cosf(rad), 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f
 		);
 	};
 	
 	inline ew::Mat4 RotateZ(float rad) {
 		return ew::Mat4(
-			cosA, -sinA, 0.0f, 0.0f,
-			sinA, cosA, 0.0f, 0.0f,
+			cosf(rad), -sinf(rad), 0.0f, 0.0f,
+			sinf(rad), cosf(rad), 0.0f, 0.0f,
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f
 		);

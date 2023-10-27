@@ -128,6 +128,7 @@ int main() {
 			ImGui::NewFrame();
 
 			ImGui::Begin("Settings");
+			
 			if (ImGui::CollapsingHeader("Camera")) {
 				ImGui::DragFloat3("Position", &camera.position.x, 0.1f);
 				ImGui::DragFloat3("Target", &camera.target.x, 0.1f);
