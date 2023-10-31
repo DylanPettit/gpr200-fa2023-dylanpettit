@@ -20,7 +20,7 @@
 #include <dp/transformations.h>
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-void moveCamera(GLFWwindow* window, Camera* camera, float deltaTime);
+void moveCamera(GLFWwindow* window, dp::Camera* camera, dp::CameraController* cameraCon, float deltaTime);
 
 //Projection will account for aspect ratio!
 const int SCREEN_WIDTH = 1080;
@@ -72,19 +72,19 @@ int main() {
 	//Cube positions
 	for (size_t i = 0; i < NUM_CUBES; i++)
 	{
-		cubeTransforms[i].position.x = i % (NUM_CUBES / 2) - 0.5;
-		cubeTransforms[i].position.y = i / (NUM_CUBES / 2) - 0.5;
+		cubeTransforms[i].position.x = i / static_cast<float>((NUM_CUBES / 2)) - 0.5;
+		cubeTransforms[i].position.y = i / static_cast<float>((NUM_CUBES / 2)) - 0.5;
 	}
 
-	float prevtime;
+	float prevtime = 0.0f;
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 
 		float time = (float)glfwGetTime(); //Timestamp of current frame
-		float deltaTime = time - prevTime;
-		prevTime = time;
+		float deltaTime = time - prevtime;
+		prevtime = time;
 
-		moveCamera(window, &camera, deltaTime);
+		moveCamera(window, &camera, &cameraCon, deltaTime);
 		glClearColor(0.3f, 0.4f, 0.9f, 1.0f);
 		//Clear both color buffer AND depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -151,14 +151,14 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void moveCamera(GLFWwindow* window, dp::Camera* camera, float deltaTime)
+void moveCamera(GLFWwindow* window, dp::Camera* camera, dp::CameraController* cameraCon, float deltaTime)
 {
-	bool prevFirstMouse = firstMouse;
+	bool prevFirstMouse = cameraCon->firstMouse;
 
 	if (!glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2)) {
 		//Release cursor
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		firstMouse = true;
+		cameraCon->firstMouse = true;
 		return;
 	}
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -166,25 +166,25 @@ void moveCamera(GLFWwindow* window, dp::Camera* camera, float deltaTime)
 	double mouseX, mouseY;
 	glfwGetCursorPos(window, &mouseX, &mouseY);
 
-	if (firstMouse) {
-		firstMouse = false;
-		prevMouseX = mouseX;
-		prevMouseY = mouseY;
+	if (cameraCon->firstMouse) {
+		cameraCon->firstMouse = false;
+		cameraCon->prevMouseX = mouseX;
+		cameraCon->prevMouseY = mouseY;
 	}
 
-	float mouseDeltaX = (float)(mouseX - prevMouseX);
-	float mouseDeltaY = (float)(mouseY - prevMouseY);
+	float mouseDeltaX = (float)(mouseX - cameraCon->prevMouseX);
+	float mouseDeltaY = (float)(mouseY - cameraCon->prevMouseY);
 
-	prevMouseX = mouseX;
-	prevMouseY = mouseY;
+	cameraCon->prevMouseX = mouseX;
+	cameraCon->prevMouseY = mouseY;
 
 
-	yaw += mouseDeltaX * mouseSensitivity;
-	pitch -= mouseDeltaY * mouseSensitivity;
-	pitch = ew::Clamp(pitch, -89.0f, 89.0f);
+	cameraCon->yaw += mouseDeltaX * cameraCon->mouseSensitivity;
+	cameraCon->pitch -= mouseDeltaY * cameraCon->mouseSensitivity;
+	cameraCon->pitch = ew::Clamp(cameraCon->pitch, -89.0f, 89.0f);
 
-	float yawRad = ew::Radians(yaw);
-	float pitchRad = ew::Radians(pitch);
+	float yawRad = ew::Radians(cameraCon->yaw);
+	float pitchRad = ew::Radians(cameraCon->pitch);
 
 	ew::Vec3 forward;
 	forward.x = cosf(pitchRad) * sinf(yawRad);
@@ -195,26 +195,26 @@ void moveCamera(GLFWwindow* window, dp::Camera* camera, float deltaTime)
 	ew::Vec3 right = ew::Normalize(ew::Cross(forward, ew::Vec3(0, 1, 0)));
 	ew::Vec3 up = ew::Normalize(ew::Cross(right, forward));
 
-	float speed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) ? sprintMoveSpeed : moveSpeed;
+	float speed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) ? cameraCon->sprintMoveSpeed : cameraCon->moveSpeed;
 	float moveDelta = speed * deltaTime;
 
 	if (glfwGetKey(window, GLFW_KEY_W))
-		camera->position += forward * moveDelta;
+		camera->pos += forward * moveDelta;
 
 	if (glfwGetKey(window, GLFW_KEY_S))
-		camera->position -= forward * moveDelta;
+		camera->pos -= forward * moveDelta;
 
 	if (glfwGetKey(window, GLFW_KEY_D))
-		camera->position += right * moveDelta;
+		camera->pos += right * moveDelta;
 
 	if (glfwGetKey(window, GLFW_KEY_A))
-		camera->position -= right * moveDelta;
+		camera->pos -= right * moveDelta;
 
 	if (glfwGetKey(window, GLFW_KEY_E))
-		camera->position += up * moveDelta;
+		camera->pos += up * moveDelta;
 
 	if (glfwGetKey(window, GLFW_KEY_Q))
-		camera->position -= up * moveDelta;
+		camera->pos -= up * moveDelta;
 
-	camera->target = camera->position + forward;
+	camera->target = camera->pos + forward;
 }

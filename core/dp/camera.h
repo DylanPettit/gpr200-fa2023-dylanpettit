@@ -9,14 +9,14 @@
 
 namespace dp {
 	struct Camera {
-		ew::Vec3 pos; //Camera body position
-		ew::Vec3 target; //Position to look at
-		float fov; //Vertical field of view in degrees
+		ew::Vec3 pos = (0.0f, 0.0f, 5.0f); //Camera body position
+		ew::Vec3 target = (0.0f, 0.0f, 0.0f); //Position to look at
+		float fov = 60.0f; //Vertical field of view in degrees
 		float aspect; //Screen width / Screen height
-		float near; //Near plane distance (+Z)
-		float far; //Far plane distance (+Z)
-		bool ortho; //Perspective or orthographic?
-		float orthoSize; //Height of orthographic frustum
+		float near = 0.1f; //Near plane distance (+Z)
+		float far = 100.0f; //Far plane distance (+Z)
+		bool ortho = true; //Perspective or orthographic?
+		float orthoSize = 6.0f; //Height of orthographic frustum
 		ew::Mat4 ViewMatrix()const { return dp::LookAt(pos, target, ew::Vec3(0, 1, 0)); } //World->View
 		ew::Mat4 ProjectionMatrix()const //View->Clip
 		{
