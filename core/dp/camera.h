@@ -5,6 +5,7 @@
 #include "../ew/ewMath/mat4.h"
 #include "../ew/ewMath/vec3.h"
 #include "../ew/external/glad.h"
+
 #include "transformations.h"
 
 namespace dp {
@@ -36,5 +37,9 @@ namespace dp {
 		double prevMouseX = 0; //Stores previous mouse X position each frame
 		double prevMouseY = 0; //Stores previous mouse Y position each frame
 		bool firstMouse = true; //Used to get first frame mouse position
+
+		void moveCamera(GLFWwindow* window, dp::Camera* camera, dp::CameraController* cameraCon, float deltaTime);
+
+		void resetCamera(dp::Camera& camera, dp::CameraController& cameraController, float aspect);
 		};
 }
